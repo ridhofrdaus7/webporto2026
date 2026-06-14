@@ -3,3 +3,6 @@ node_modules
 .env
 .env.local
 public/uploads
+
+# Local Netlify folder
+.netlify
