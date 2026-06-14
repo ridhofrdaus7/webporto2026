@@ -1,6 +1,12 @@
 import { unstable_cache as nextCache } from "next/cache";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
-import { isSupabaseAdminConfigured } from "@/lib/supabase/config";
+import {
+  isSupabaseAdminConfigured,
+  isSupabaseConfigured,
+  SUPABASE_ANON_KEY,
+  SUPABASE_URL
+} from "@/lib/supabase/config";
 import {
   brands as sampleBrands,
   catalogs as sampleCatalogs,
@@ -34,6 +40,14 @@ const PROJECT_CARD_SELECT =
 const PROJECT_LINK_SELECT = "id,title,slug,created_at";
 const PUBLIC_CACHE_TAG = "portfolio-content";
 const PUBLIC_CACHE_SECONDS = 60 * 30;
+
+function createSupabasePublicReadClient(): SupabaseClient {
+  if (isSupabaseAdminConfigured()) return createSupabaseAdminClient();
+
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
 
 type ProjectRow = Record<string, unknown> & {
   brand: { id: string; name: string; slug: string } | null;
@@ -178,12 +192,12 @@ function sampleAdminProjects(): AdminProjectSummary[] {
 }
 
 async function fetchPublishedProjects(): Promise<PortfolioProject[]> {
-  if (!isSupabaseAdminConfigured()) {
+  if (!isSupabaseConfigured()) {
     return sampleProjects.filter((project) => project.status === "published");
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("projects")
       .select(PROJECT_SELECT)
@@ -202,7 +216,7 @@ export const getPublishedProjects = nextCache(fetchPublishedProjects, ["publishe
 });
 
 async function fetchPublishedProjectCards(): Promise<ProjectCardSummary[]> {
-  if (!isSupabaseAdminConfigured()) {
+  if (!isSupabaseConfigured()) {
     return sampleProjects
       .filter((project) => project.status === "published")
       .map((project) => ({
@@ -225,7 +239,7 @@ async function fetchPublishedProjectCards(): Promise<ProjectCardSummary[]> {
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("projects")
       .select(PROJECT_CARD_SELECT)
@@ -266,14 +280,14 @@ export const getPublishedProjectCards = nextCache(
 );
 
 async function fetchPublishedProjectLinks(): Promise<ProjectLinkSummary[]> {
-  if (!isSupabaseAdminConfigured()) {
+  if (!isSupabaseConfigured()) {
     return sampleProjects
       .filter((project) => project.status === "published")
       .map((project) => ({ id: project.id, title: project.title, slug: project.slug }));
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("projects")
       .select(PROJECT_LINK_SELECT)
@@ -413,7 +427,7 @@ export async function getProjectById(id: string): Promise<PortfolioProject | nul
 }
 
 async function fetchProjectBySlug(slug: string): Promise<PortfolioProject | null> {
-  if (!isSupabaseAdminConfigured()) {
+  if (!isSupabaseConfigured()) {
     return (
       sampleProjects.find(
         (project) => project.slug === slug && project.status === "published"
@@ -422,7 +436,7 @@ async function fetchProjectBySlug(slug: string): Promise<PortfolioProject | null
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("projects")
       .select(PROJECT_SELECT)
@@ -452,14 +466,14 @@ export async function getCatalogs(): Promise<CatalogOption[]> {
     label: `${catalog.brandName} / ${catalog.name}`
   });
 
-  if (!isSupabaseAdminConfigured()) {
+  if (!isSupabaseConfigured()) {
     return sampleCatalogs.map((catalog) =>
       mapCatalog(catalog, sampleBrands.find((b) => b.slug === catalog.brandSlug)?.id ?? null)
     );
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("catalogs")
       .select("id,name,slug,brand_name,brand_id")
@@ -487,10 +501,10 @@ export async function getCatalogs(): Promise<CatalogOption[]> {
 }
 
 export async function getBrands(): Promise<Brand[]> {
-  if (!isSupabaseAdminConfigured()) return sampleBrands;
+  if (!isSupabaseConfigured()) return sampleBrands;
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("brands")
       .select("id,name,slug")
@@ -503,10 +517,10 @@ export async function getBrands(): Promise<Brand[]> {
 }
 
 export async function getCategories() {
-  if (!isSupabaseAdminConfigured()) return sampleCategories;
+  if (!isSupabaseConfigured()) return sampleCategories;
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("categories")
       .select("id,name,slug")
@@ -519,10 +533,10 @@ export async function getCategories() {
 }
 
 export async function getProfile() {
-  if (!isSupabaseAdminConfigured()) return sampleProfile;
+  if (!isSupabaseConfigured()) return sampleProfile;
 
   try {
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabasePublicReadClient();
     const { data, error } = await supabase
       .from("profile")
       .select(

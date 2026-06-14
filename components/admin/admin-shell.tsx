@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SignOutButton } from "@/components/admin/sign-out-button";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -13,6 +14,7 @@ const nav = [
 
 export async function AdminShell({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
+  if (!user) redirect("/admin/login");
 
   return (
     <main className="min-h-screen bg-[#f5f5f2]">

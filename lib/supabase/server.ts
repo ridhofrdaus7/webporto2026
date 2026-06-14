@@ -25,8 +25,8 @@ export async function createSupabaseServerClient() {
             cookieStore.set(name, value, options)
           );
         } catch {
-          // setAll can be called from a Server Component where cookies are
-          // read-only. Middleware refreshes the session, so this is safe to ignore.
+          // Server Components can read cookies but cannot always write refreshed
+          // session cookies; Server Actions and Route Handlers still can.
         }
       }
     }

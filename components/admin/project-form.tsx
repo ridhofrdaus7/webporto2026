@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import type { ProjectFormState } from "@/lib/admin-actions";
 import type { CatalogOption } from "@/lib/portfolio";
 import type { PortfolioProject } from "@/lib/sample-data";
+import { useToast } from "@/components/admin/toast";
 
 type GalleryItem = {
   mediaUrl: string;
@@ -35,7 +36,13 @@ export function ProjectForm({
   catalogs: CatalogOption[];
   project?: PortfolioProject;
 }) {
+  const toast = useToast();
   const [state, formAction] = useActionState(action, {});
+
+  useEffect(() => {
+    if (state?.error) toast.error(state.error);
+  }, [state, toast]);
+
   const [brandId, setBrandId] = useState(project?.brand?.id ?? "");
   const [catalogId, setCatalogId] = useState(project?.catalog?.id ?? "");
   const visibleCatalogs = useMemo(

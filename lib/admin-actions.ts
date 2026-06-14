@@ -103,7 +103,7 @@ export async function createProjectAction(
   }
 
   revalidatePortfolioContent();
-  redirect("/admin/projects");
+  redirect("/admin/projects?toast=project-created");
 }
 
 export async function updateProjectAction(
@@ -137,7 +137,7 @@ export async function updateProjectAction(
   }
 
   revalidatePortfolioContent();
-  redirect("/admin/projects");
+  redirect("/admin/projects?toast=project-updated");
 }
 
 export async function deleteProjectAction(id: string) {
@@ -146,28 +146,30 @@ export async function deleteProjectAction(id: string) {
 
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from("projects").delete().eq("id", id);
-  if (error) throw error;
+  if (error) redirect("/admin/projects?toast=error");
 
   revalidatePortfolioContent();
+  redirect("/admin/projects?toast=project-deleted");
 }
 
 export async function createBrandAction(formData: FormData) {
   await requireAdmin();
   if (!isSupabaseAdminConfigured()) redirect("/admin/brands?demo=1");
 
-  const parsed = brandSchema.parse({
+  const parsed = brandSchema.safeParse({
     name: formString(formData, "name"),
     slug: formString(formData, "slug")
   });
+  if (!parsed.success) redirect("/admin/brands?toast=input-error");
 
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("brands").insert(brandDataForDb(parsed));
-  if (error) throw error;
+  const { error } = await supabase.from("brands").insert(brandDataForDb(parsed.data));
+  if (error) redirect("/admin/brands?toast=error");
 
   updateTag("portfolio-content");
   revalidatePath("/admin/brands");
   revalidatePath("/portfolio");
-  redirect("/admin/brands");
+  redirect("/admin/brands?toast=brand-created");
 }
 
 export async function deleteBrandAction(id: string) {
@@ -176,18 +178,19 @@ export async function deleteBrandAction(id: string) {
 
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from("brands").delete().eq("id", id);
-  if (error) throw error;
+  if (error) redirect("/admin/brands?toast=error");
 
   updateTag("portfolio-content");
   revalidatePath("/admin/brands");
   revalidatePath("/portfolio");
+  redirect("/admin/brands?toast=brand-deleted");
 }
 
 export async function updateProfileAction(formData: FormData) {
   await requireAdmin();
   if (!isSupabaseAdminConfigured()) redirect("/admin/profile?demo=1");
 
-  const parsed = profileSchema.parse({
+  const parsed = profileSchema.safeParse({
     name: formString(formData, "name"),
     headline: formString(formData, "headline"),
     bio: formString(formData, "bio"),
@@ -198,9 +201,10 @@ export async function updateProfileAction(formData: FormData) {
     linkedinUrl: formString(formData, "linkedinUrl"),
     cvUrl: formString(formData, "cvUrl")
   });
+  if (!parsed.success) redirect("/admin/profile?toast=input-error");
 
   const supabase = createSupabaseAdminClient();
-  const payload = profileDataForDb(parsed);
+  const payload = profileDataForDb(parsed.data);
 
   const { data: existing } = await supabase.from("profile").select("id").maybeSingle();
   if (existing) {
@@ -208,13 +212,13 @@ export async function updateProfileAction(formData: FormData) {
       .from("profile")
       .update(payload)
       .eq("id", existing.id);
-    if (error) throw error;
+    if (error) redirect("/admin/profile?toast=error");
   } else {
     const { error } = await supabase.from("profile").insert(payload);
-    if (error) throw error;
+    if (error) redirect("/admin/profile?toast=error");
   }
 
   revalidatePortfolioContent();
   revalidatePath("/about");
-  redirect("/admin/profile");
+  redirect("/admin/profile?toast=profile-saved");
 }

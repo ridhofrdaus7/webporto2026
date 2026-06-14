@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/admin/toast";
 
 export function LoginForm() {
   const router = useRouter();
+  const toast = useToast();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,10 +24,11 @@ export function LoginForm() {
     setLoading(false);
     if (signInError) {
       setError("Invalid login details.");
+      toast.error("Email atau password salah.");
       return;
     }
 
-    router.push("/admin/dashboard");
+    router.push("/admin/dashboard?toast=login-success");
     router.refresh();
   }
 
