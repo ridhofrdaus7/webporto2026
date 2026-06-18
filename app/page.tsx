@@ -14,14 +14,16 @@ export default async function HomePage() {
   const [projects, profile] = await Promise.all([getPublishedProjectCards(), getProfile()]);
   const grid = projects.slice(1, 3);
 
-  // Featured slider — every project (unique covers), newest first.
+  // Featured slider — the first 7 uploaded projects (oldest first), unique covers.
   const seenFeatured = new Set<string>();
-  const featuredItems = projects
+  const featuredItems = [...projects]
+    .reverse()
     .filter((project) => {
       if (!project.thumbnailUrl || seenFeatured.has(project.thumbnailUrl)) return false;
       seenFeatured.add(project.thumbnailUrl);
       return true;
     })
+    .slice(0, 7)
     .map((project) => ({
       slug: project.slug,
       title: project.title,
@@ -59,8 +61,8 @@ export default async function HomePage() {
       </section>
 
       {featuredItems.length > 0 && (
-        <section className="container-shell section-pad">
-          <Reveal>
+        <section className="w-full">
+          <Reveal className="h-full">
             <FeaturedSlider items={featuredItems} />
           </Reveal>
         </section>
