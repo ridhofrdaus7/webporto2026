@@ -2,8 +2,12 @@
  * Seeds Supabase with the admin user, categories, profile, and sample projects.
  * Run with: npm run db:seed
  *
- * Requires NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ADMIN_EMAIL,
- * and ADMIN_PASSWORD in the environment (.env).
+ * Requires NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+ *
+ * Admin creation is optional and credential-free by default: pass
+ * ADMIN_EMAIL and ADMIN_PASSWORD inline ONLY when you want to create the
+ * admin user (do not store them in .env), e.g.
+ *   ADMIN_EMAIL="you@mail.com" ADMIN_PASSWORD="strong" npm run db:seed
  */
 import { createClient } from "@supabase/supabase-js";
 import { brands, catalogs, categories, profile, sampleProjects } from "../lib/sample-data";
@@ -22,8 +26,16 @@ const supabase = createClient(url, serviceKey, {
 });
 
 async function seedAdminUser() {
-  const email = process.env.ADMIN_EMAIL ?? "admin@ridho.local";
-  const password = process.env.ADMIN_PASSWORD ?? "change-this-password";
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    console.log(
+      "Skipping admin user (no ADMIN_EMAIL/ADMIN_PASSWORD provided). " +
+        "Pass them inline only when you need to create one, or use the Supabase dashboard."
+    );
+    return;
+  }
 
   const { data, error } = await supabase.auth.admin.createUser({
     email,

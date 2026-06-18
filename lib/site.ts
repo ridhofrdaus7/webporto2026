@@ -4,11 +4,10 @@
  * easy to edit in one place. Indonesian for the local client market.
  */
 
+// Phone/WhatsApp intentionally omitted from the public site for privacy.
+// Contact is via email and the contact form only.
 export const siteContact = {
   email: "ridhofirdaus077@gmail.com",
-  phoneDisplay: "0899-7861-779",
-  waNumber: "628997861779",
-  waLink: "https://wa.me/628997861779",
   responseTime: "Biasanya saya balas dalam < 24 jam"
 };
 

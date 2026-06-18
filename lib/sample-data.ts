@@ -181,7 +181,7 @@ export const profile = {
   headline: "Graphic Designer / Video Editor / Creative Designer",
   bio: "I create campaign visuals, social media systems, product catalogs, and edited videos for brands that need clean visual storytelling with commercial intent.",
   email: "ridhofirdaus077@gmail.com",
-  whatsapp: "0899-7861-779",
+  whatsapp: "",
   instagramUrl: "",
   linkedinUrl: ""
 };

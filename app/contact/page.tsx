@@ -28,13 +28,6 @@ export default function ContactPage() {
             Kirim brief project, kebutuhan kampanye, atau ide kolaborasi. {siteContact.responseTime}.
           </p>
           <div className="mt-8 grid gap-4 text-sm font-black uppercase">
-            <a
-              href={siteContact.waLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              WhatsApp · {siteContact.phoneDisplay}
-            </a>
             <a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>
             <a href={portfolioPdfUrl} download className="text-muted hover:text-ink">
               Download Portfolio (PDF)

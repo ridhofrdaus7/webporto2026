@@ -145,23 +145,18 @@ export default async function HomePage() {
               Cerita & visual yang menjual untuk brand kamu. {siteContact.responseTime}.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href={siteContact.waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="button-pill button-dark"
-              >
-                Chat WhatsApp
-              </a>
-              <a href={`mailto:${siteContact.email}`} className="button-pill button-light">
+              <a href={`mailto:${siteContact.email}`} className="button-pill button-dark">
                 Email Saya
               </a>
+              <Link href="/contact" className="button-pill button-light">
+                Isi Form Kontak
+              </Link>
               <a href={portfolioPdfUrl} download className="button-pill button-light">
                 Download Portfolio (PDF)
               </a>
             </div>
             <p className="mt-6 text-xs font-bold uppercase tracking-wide text-muted">
-              {siteContact.phoneDisplay} · {siteContact.email}
+              {siteContact.email}
             </p>
           </Reveal>
         </div>

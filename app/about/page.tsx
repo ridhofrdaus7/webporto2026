@@ -42,7 +42,6 @@ export default async function AboutPage() {
             <p>Skills<br /><span className="text-ink">Graphic Design / Video Editing / Campaign Visual / UI Design</span></p>
             <p>Tools<br /><span className="text-ink">Adobe Photoshop / Premiere Pro / Figma / Canva / AI Tools</span></p>
             <p>Email<br /><span className="text-ink">{siteContact.email}</span></p>
-            <p>WhatsApp<br /><span className="text-ink">{siteContact.phoneDisplay}</span></p>
           </div>
         </Reveal>
       </section>
