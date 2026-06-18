@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FeaturedSlider } from "@/components/public/featured-slider";
-import { HeroShowcase } from "@/components/public/hero-showcase";
+import { HeroVideo } from "@/components/public/hero-video";
 import { ProjectCard } from "@/components/public/project-card";
 import { PublicHeader } from "@/components/public/public-header";
 import { ServicesSection } from "@/components/public/services-section";
@@ -13,23 +13,6 @@ import { getBrandBlurb, portfolioPdfUrl, siteContact } from "@/lib/site";
 export default async function HomePage() {
   const [projects, profile] = await Promise.all([getPublishedProjectCards(), getProfile()]);
   const grid = projects.slice(1, 3);
-
-  // `projects` is newest-first; reverse so the hero showcases the
-  // earliest-uploaded work, while newer work stays in the sections below.
-  const seenThumbs = new Set<string>();
-  const heroItems = [...projects]
-    .reverse()
-    .filter((project) => {
-      if (!project.thumbnailUrl || seenThumbs.has(project.thumbnailUrl)) return false;
-      seenThumbs.add(project.thumbnailUrl);
-      return true;
-    })
-    .slice(0, 6)
-    .map((project) => ({
-      src: project.thumbnailUrl,
-      title: project.title,
-      slug: project.slug
-    }));
 
   // Featured slider — every project (unique covers), newest first.
   const seenFeatured = new Set<string>();
@@ -50,9 +33,9 @@ export default async function HomePage() {
 
   return (
     <main>
-      <PublicHeader />
-      <HeroShowcase
-        items={heroItems}
+      <PublicHeader variant="overlay" />
+      <HeroVideo
+        videoSrc="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260416_031918_443d301c-b6d9-4a18-b102-c946a16d86ad.mp4"
         eyebrow="Portfolio / Creative Designer"
         headline={
           <>

@@ -166,6 +166,159 @@
   --color-muted: #777777;
 }
 
+/* Dark fallback behind the hero video (shown until/if it loads). */
+.hero-video {
+  background-color: #0a0a0b;
+}
+
+/* Focused scrim: darkens only behind the centered hero text so the
+   video stays visible at the edges while the headline keeps contrast. */
+.hero-scrim {
+  background: radial-gradient(
+    62% 58% at 50% 50%,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.28) 52%,
+    rgba(0, 0, 0, 0) 78%
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────
+   SMART HEADER
+   Smooth colour/frost transitions; currentColor focus rings that
+   stay visible over BOTH the bright hero video and paper pages.
+   ────────────────────────────────────────────────────────────── */
+.header-shell {
+  transition: background var(--duration-slow) var(--ease-standard),
+    color var(--duration-slow) var(--ease-standard),
+    border-color var(--duration-slow) var(--ease-standard);
+}
+
+.header-frost {
+  /* Mixed from the LIVE paper token → correct in light AND dark mode. */
+  background: color-mix(in srgb, var(--color-paper) 80%, transparent);
+  backdrop-filter: blur(14px) saturate(150%);
+}
+
+@supports not (backdrop-filter: blur(6px)) {
+  .header-frost {
+    background: var(--color-paper);
+  }
+}
+
+.header-shell a:focus-visible,
+.header-shell button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   EDITORIAL "STAMP" CTAs  (sharp 2px corners — used in the hero)
+   Token-driven base + over-video white pin. Hover INVERTS state so
+   the primary and secondary trade looks as a coordinated pair.
+   ────────────────────────────────────────────────────────────── */
+.cta-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 2px;
+  border: 1px solid var(--color-ink);
+  font-size: 0.74rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background var(--duration-base) var(--ease-standard),
+    color var(--duration-base) var(--ease-standard),
+    border-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+
+.cta-stamp:hover {
+  transform: translateY(-1px);
+}
+
+.cta-stamp:active {
+  transform: translateY(0);
+}
+
+.cta-arrow {
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.cta-stamp:hover .cta-arrow {
+  transform: translateX(3px);
+}
+
+.cta-stamp:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Token variants — paper / dark-mode pages (auto-flip) */
+.cta-stamp--solid {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.cta-stamp--solid:hover {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.cta-stamp--ghost {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.cta-stamp--ghost:hover {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Over-video pin (homepage hero) — explicit white per the dark-hero exception */
+.cta-stamp--on-video {
+  border-color: #ffffff;
+}
+
+.cta-stamp--on-video.cta-stamp--solid {
+  background: #ffffff;
+  color: #050505;
+}
+
+.cta-stamp--on-video.cta-stamp--solid:hover {
+  /* invert to a frosted glass that stays legible over bright frames */
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px) saturate(140%);
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.cta-stamp--on-video.cta-stamp--ghost {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.cta-stamp--on-video.cta-stamp--ghost:hover {
+  background: #ffffff;
+  color: #050505;
+  border-color: #ffffff;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-stamp,
+  .cta-stamp:hover,
+  .cta-stamp:active {
+    transform: none;
+  }
+}
+
 /* ──────────────────────────────────────────────────────────────
    BASE
    ────────────────────────────────────────────────────────────── */

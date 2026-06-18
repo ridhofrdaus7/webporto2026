@@ -24,7 +24,7 @@ function getServerSnapshot(): Theme {
   return "light";
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ onDark = false }: { onDark?: boolean }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function toggle() {
@@ -43,7 +43,11 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-ink transition hover:bg-ink hover:text-paper"
+      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition ${
+        onDark
+          ? "border-white/40 text-white hover:bg-white hover:text-black"
+          : "border-line text-ink hover:bg-ink hover:text-paper"
+      }`}
     >
       {theme === "dark" ? (
         <Sun size={15} strokeWidth={2.4} />
