@@ -11,9 +11,11 @@ export type FeaturedItem = {
   clientName: string;
   year: number;
   thumbnailUrl: string;
+  /** "Apa & untuk siapa" — short brand description. */
+  blurb: string;
 };
 
-const INTERVAL_MS = 1000;
+const INTERVAL_MS = 5000;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function FeaturedSlider({ items }: { items: FeaturedItem[] }) {
@@ -49,7 +51,7 @@ export function FeaturedSlider({ items }: { items: FeaturedItem[] }) {
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 1.01 }}
-            transition={{ duration: reduce ? 0.25 : 0.6, ease: EASE }}
+            transition={{ duration: reduce ? 0.25 : 0.85, ease: EASE }}
           >
             <Link
               href={`/portfolio/${current.slug}`}
@@ -72,7 +74,7 @@ export function FeaturedSlider({ items }: { items: FeaturedItem[] }) {
       {/* Brand title — vertically centered against the cover */}
       <div>
         <p className="eyebrow">Featured Work / {current.year}</p>
-        <div className="relative mt-5 min-h-[4.5rem] sm:min-h-[6rem]">
+        <div className="relative mt-5 min-h-[7rem] sm:min-h-[9rem]">
           <AnimatePresence initial={false}>
             <motion.div
               key={current.slug}
@@ -80,13 +82,13 @@ export function FeaturedSlider({ items }: { items: FeaturedItem[] }) {
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
-              transition={{ duration: reduce ? 0.2 : 0.35, ease: EASE }}
+              transition={{ duration: reduce ? 0.2 : 0.45, ease: EASE }}
             >
               <h2 className="line-clamp-1 text-4xl font-black uppercase leading-none sm:text-6xl">
                 {current.clientName}
               </h2>
-              <p className="mt-3 line-clamp-1 text-sm font-bold uppercase tracking-wide text-muted">
-                {current.title}
+              <p className="mt-4 line-clamp-3 max-w-md text-base font-medium leading-7 text-neutral-600">
+                {current.blurb}
               </p>
             </motion.div>
           </AnimatePresence>

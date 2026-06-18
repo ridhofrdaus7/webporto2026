@@ -180,8 +180,8 @@ export const profile = {
   name: "Ridho Firdaus",
   headline: "Graphic Designer / Video Editor / Creative Designer",
   bio: "I create campaign visuals, social media systems, product catalogs, and edited videos for brands that need clean visual storytelling with commercial intent.",
-  email: "hello@ridho.space",
-  whatsapp: "+62 812 0000 2026",
-  instagramUrl: "https://instagram.com/",
-  linkedinUrl: "https://linkedin.com/"
+  email: "ridhofirdaus077@gmail.com",
+  whatsapp: "0899-7861-779",
+  instagramUrl: "",
+  linkedinUrl: ""
 };

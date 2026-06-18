@@ -4,6 +4,7 @@ import { PublicHeader } from "@/components/public/public-header";
 import { Reveal } from "@/components/scroll/reveal";
 import { RevealText } from "@/components/scroll/reveal-text";
 import { getProfile } from "@/lib/portfolio";
+import { siteContact } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -40,8 +41,8 @@ export default async function AboutPage() {
           <div className="mt-10 grid gap-6 border-y border-line py-8 text-sm font-black uppercase text-muted sm:grid-cols-2">
             <p>Skills<br /><span className="text-ink">Graphic Design / Video Editing / Campaign Visual / UI Design</span></p>
             <p>Tools<br /><span className="text-ink">Adobe Photoshop / Premiere Pro / Figma / Canva / AI Tools</span></p>
-            <p>Email<br /><span className="text-ink">{profile.email}</span></p>
-            <p>WhatsApp<br /><span className="text-ink">{profile.whatsapp}</span></p>
+            <p>Email<br /><span className="text-ink">{siteContact.email}</span></p>
+            <p>WhatsApp<br /><span className="text-ink">{siteContact.phoneDisplay}</span></p>
           </div>
         </Reveal>
       </section>

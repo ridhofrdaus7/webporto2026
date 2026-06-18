@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ContactForm } from "@/components/public/contact-form";
 import { PublicHeader } from "@/components/public/public-header";
 import { Reveal } from "@/components/scroll/reveal";
 import { RevealText } from "@/components/scroll/reveal-text";
-import { getProfile } from "@/lib/portfolio";
+import { portfolioPdfUrl, siteContact } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Contact Ridho Firdaus for creative design, video editing, and campaign visual projects."
 };
 
-export default async function ContactPage() {
-  const profile = await getProfile();
-
+export default function ContactPage() {
   return (
     <main>
       <PublicHeader />
@@ -28,13 +25,20 @@ export default async function ContactPage() {
       <section className="container-shell grid gap-12 pb-24 lg:grid-cols-[0.7fr_1fr]">
         <Reveal as="aside" className="border-y border-line py-8">
           <p className="text-2xl font-semibold leading-9 text-neutral-700">
-            Send a project brief, campaign need, or collaboration idea. You can also reach Ridho directly through email, WhatsApp, or social links.
+            Kirim brief project, kebutuhan kampanye, atau ide kolaborasi. {siteContact.responseTime}.
           </p>
           <div className="mt-8 grid gap-4 text-sm font-black uppercase">
-            <Link href={`mailto:${profile.email}`}>{profile.email}</Link>
-            <Link href={`https://wa.me/${profile.whatsapp.replace(/\D/g, "")}`}>WhatsApp</Link>
-            {profile.instagramUrl && <Link href={profile.instagramUrl}>Instagram</Link>}
-            {profile.linkedinUrl && <Link href={profile.linkedinUrl}>LinkedIn</Link>}
+            <a
+              href={siteContact.waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp · {siteContact.phoneDisplay}
+            </a>
+            <a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>
+            <a href={portfolioPdfUrl} download className="text-muted hover:text-ink">
+              Download Portfolio (PDF)
+            </a>
           </div>
         </Reveal>
         <ContactForm />
