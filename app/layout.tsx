@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/admin/toast";
 import { ToastFromParams } from "@/components/admin/toast-params";
+import { ScrollProgress } from "@/components/scroll/scroll-progress";
+
+// Runs before paint to set the theme from storage / OS preference,
+// avoiding a flash of the wrong theme on first load.
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){}})();`;
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta"
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif"
 });
 
 export const metadata: Metadata = {
@@ -29,8 +41,12 @@ export default function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={plusJakarta.variable}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className={`${plusJakarta.variable} ${instrumentSerif.variable}`}>
+        <ScrollProgress />
         <ToastProvider>
           {children}
           <Suspense>

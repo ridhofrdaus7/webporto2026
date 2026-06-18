@@ -48,7 +48,7 @@ export function ContactForm() {
       </div>
       <input className="field" placeholder="Project need" {...register("projectNeed")} />
       <textarea className="field min-h-40 resize-y" placeholder="Message" {...register("message")} />
-      <div className="min-h-6 text-sm font-semibold text-[#777777]">
+      <div className="min-h-6 text-sm font-semibold text-muted">
         {Object.values(errors)[0]?.message?.toString()}
         {state === "sent" && "Message saved. Ridho will reply soon."}
         {state === "error" && "Could not send the message. Please try again."}

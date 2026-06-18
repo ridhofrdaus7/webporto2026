@@ -12,12 +12,12 @@ export default async function AdminProfilePage({
   return (
     <AdminShell>
       <div className="grid gap-8">
-        <div className="border-b border-[#d9d9d9] pb-8">
+        <div className="border-b border-line pb-8">
           <p className="eyebrow">Profile Settings</p>
           <h1 className="mt-3 text-6xl font-black uppercase leading-none">Owner Profile</h1>
         </div>
         {demo && (
-          <div className="border border-[#d9d9d9] bg-white p-5 font-bold text-[#777777]">
+          <div className="border border-line bg-card p-5 font-bold text-muted">
             Demo mode: profile changes need a connected PostgreSQL database.
           </div>
         )}

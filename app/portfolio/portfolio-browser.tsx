@@ -33,7 +33,7 @@ export function PortfolioBrowser({
 
   return (
     <div>
-      <div className="mb-10 grid gap-4 border-y border-[#d9d9d9] py-5 lg:grid-cols-[1fr_0.45fr]">
+      <div className="mb-10 grid gap-4 border-y border-line py-5 lg:grid-cols-[1fr_0.45fr]">
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setCategory("all")} className={`button-pill ${category === "all" ? "button-dark" : "button-light"}`}>
             All
@@ -52,7 +52,7 @@ export function PortfolioBrowser({
         />
       </div>
       {filtered.length === 0 ? (
-        <div className="border border-[#d9d9d9] bg-white p-10 text-xl font-black uppercase">
+        <div className="border border-line bg-card p-10 text-xl font-black uppercase">
           No published projects found.
         </div>
       ) : (

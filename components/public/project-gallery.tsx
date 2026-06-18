@@ -105,7 +105,7 @@ export function ProjectGallery({ gallery }: { gallery: GalleryMedia[] }) {
             type="button"
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-card/10 text-2xl font-bold text-white transition hover:bg-card/20"
           >
             ×
           </button>
@@ -119,7 +119,7 @@ export function ProjectGallery({ gallery }: { gallery: GalleryMedia[] }) {
                   event.stopPropagation();
                   show(activeIndex - 1);
                 }}
-                className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+                className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-card/10 text-2xl text-white transition hover:bg-card/20"
               >
                 ‹
               </button>
@@ -130,7 +130,7 @@ export function ProjectGallery({ gallery }: { gallery: GalleryMedia[] }) {
                   event.stopPropagation();
                   show(activeIndex + 1);
                 }}
-                className="absolute right-4 bottom-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20 sm:bottom-auto sm:top-1/2"
+                className="absolute right-4 bottom-4 flex h-11 w-11 items-center justify-center rounded-full bg-card/10 text-2xl text-white transition hover:bg-card/20 sm:bottom-auto sm:top-1/2"
               >
                 ›
               </button>

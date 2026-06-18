@@ -174,11 +174,11 @@ export function ProjectForm({
         <input name="tools" className="field" defaultValue={project?.tools} placeholder="Tools" required />
       </div>
 
-      <section className="grid gap-4 border border-[#d9d9d9] bg-white p-5">
+      <section className="grid gap-4 border border-line bg-card p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Thumbnail</p>
-            <p className="mt-2 text-sm font-semibold text-[#777777]">Upload JPG, PNG, or WEBP for the project cover.</p>
+            <p className="mt-2 text-sm font-semibold text-muted">Upload JPG, PNG, or WEBP for the project cover.</p>
           </div>
           <label className="button-pill button-light w-fit cursor-pointer">
             {uploading === "thumbnail" ? "Uploading" : "Upload Cover"}
@@ -200,17 +200,17 @@ export function ProjectForm({
           required
         />
         {thumbnailUrl ? (
-          <div className="relative aspect-[1.6/1] overflow-hidden rounded-2xl bg-[#f5f5f2]">
+          <div className="relative aspect-[1.6/1] overflow-hidden rounded-2xl bg-paper">
             <Image src={thumbnailUrl} alt="Project thumbnail preview" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
           </div>
         ) : null}
       </section>
 
-      <section className="grid gap-4 border border-[#d9d9d9] bg-white p-5">
+      <section className="grid gap-4 border border-line bg-card p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Gallery Media</p>
-            <p className="mt-2 text-sm font-semibold text-[#777777]">Upload multiple images or videos for one brand, then save the project.</p>
+            <p className="mt-2 text-sm font-semibold text-muted">Upload multiple images or videos for one brand, then save the project.</p>
           </div>
           <label className="button-pill button-light w-fit cursor-pointer">
             {uploading === "gallery" ? "Uploading" : "Upload Media"}
@@ -230,8 +230,8 @@ export function ProjectForm({
         {galleryItems.length > 0 ? (
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {galleryItems.map((media, index) => (
-              <article key={`${media.mediaUrl}-${index}`} className="grid gap-3 border border-[#d9d9d9] p-3">
-                <div className="relative aspect-[1.35/1] overflow-hidden rounded-xl bg-[#f5f5f2]">
+              <article key={`${media.mediaUrl}-${index}`} className="grid gap-3 border border-line p-3">
+                <div className="relative aspect-[1.35/1] overflow-hidden rounded-xl bg-paper">
                   {media.mediaType === "video" ? (
                     <video src={media.mediaUrl} className="h-full w-full object-cover" muted playsInline controls />
                   ) : (
@@ -257,14 +257,14 @@ export function ProjectForm({
             ))}
           </div>
         ) : (
-          <p className="border border-dashed border-[#d9d9d9] p-5 text-sm font-bold uppercase text-[#777777]">
+          <p className="border border-dashed border-line p-5 text-sm font-bold uppercase text-muted">
             No gallery media yet.
           </p>
         )}
       </section>
 
       {uploadMessage ? (
-        <p className="text-sm font-black uppercase text-[#777777]">{uploadMessage}</p>
+        <p className="text-sm font-black uppercase text-muted">{uploadMessage}</p>
       ) : null}
 
       <textarea name="shortDescription" className="field min-h-24" defaultValue={project?.shortDescription} placeholder="Short description" required />

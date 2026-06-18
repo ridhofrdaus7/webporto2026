@@ -14,7 +14,7 @@ export default async function AdminProjectsPage({
   return (
     <AdminShell>
       <div className="grid gap-8">
-        <div className="flex flex-col gap-5 border-b border-[#d9d9d9] pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-5 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Manage Projects</p>
             <h1 className="mt-3 text-6xl font-black uppercase leading-none">Portfolio CMS</h1>
@@ -22,12 +22,12 @@ export default async function AdminProjectsPage({
           <Link href="/admin/projects/create" className="button-pill button-dark w-fit">Create Project</Link>
         </div>
         {demo && (
-          <div className="border border-[#d9d9d9] bg-white p-5 font-bold text-[#777777]">
+          <div className="border border-line bg-card p-5 font-bold text-muted">
             Demo mode: connect Supabase and run the schema to persist admin changes.
           </div>
         )}
-        <div className="overflow-hidden border border-[#d9d9d9] bg-white">
-          <div className="hidden grid-cols-[86px_1fr_150px_170px_120px_180px] border-b border-[#d9d9d9] p-4 text-xs font-black uppercase text-[#777777] md:grid">
+        <div className="overflow-hidden border border-line bg-card">
+          <div className="hidden grid-cols-[86px_1fr_150px_170px_120px_180px] border-b border-line p-4 text-xs font-black uppercase text-muted md:grid">
             <span>Image</span>
             <span>Title</span>
             <span>Category</span>
@@ -35,7 +35,7 @@ export default async function AdminProjectsPage({
             <span>Status</span>
             <span>Action</span>
           </div>
-          <div className="divide-y divide-[#d9d9d9]">
+          <div className="divide-y divide-line">
             {projects.map((project) => (
               <div key={project.id} className="grid gap-4 p-4 md:grid-cols-[86px_1fr_150px_170px_120px_180px] md:items-center">
                 <Image
@@ -48,10 +48,10 @@ export default async function AdminProjectsPage({
                 />
                 <div>
                   <p className="font-black uppercase">{project.title}</p>
-                  <p className="text-xs font-bold uppercase text-[#777777]">{project.clientName} / {project.year}</p>
+                  <p className="text-xs font-bold uppercase text-muted">{project.clientName} / {project.year}</p>
                 </div>
-                <p className="text-sm font-bold uppercase text-[#777777]">{project.category.name}</p>
-                <p className="text-sm font-bold uppercase text-[#777777]">
+                <p className="text-sm font-bold uppercase text-muted">{project.category.name}</p>
+                <p className="text-sm font-bold uppercase text-muted">
                   {project.catalog ? `${project.catalog.brandName} / ${project.catalog.name}` : "-"}
                 </p>
                 <p className="text-sm font-black uppercase">{project.status}</p>

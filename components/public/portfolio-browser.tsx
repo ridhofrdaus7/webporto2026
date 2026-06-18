@@ -43,7 +43,7 @@ export function PortfolioBrowser({
 
   return (
     <div className="grid gap-10">
-      <div className="flex flex-col gap-4 border-y border-[#d9d9d9] py-5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 border-y border-line py-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setCategory("all")}
@@ -74,7 +74,7 @@ export function PortfolioBrowser({
         ))}
       </div>
       {!filtered.length ? (
-        <p className="border-t border-[#d9d9d9] pt-8 text-2xl font-black uppercase">
+        <p className="border-t border-line pt-8 text-2xl font-black uppercase">
           No published projects found.
         </p>
       ) : null}

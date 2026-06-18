@@ -1,13 +1,174 @@
 @import "tailwindcss";
 
-:root {
-  --background: #f5f5f2;
-  --foreground: #050505;
-  --muted: #777777;
-  --border: #d9d9d9;
-  --card: #ffffff;
+/* ──────────────────────────────────────────────────────────────
+   DESIGN TOKENS
+   Tailwind v4 `@theme` exposes each token as BOTH a CSS custom
+   property (var(--color-ink)) and a utility class (bg-ink,
+   text-muted, rounded-pill, shadow-toast, …).
+   Editorial / minimal system: paper background, near-black ink,
+   neutral greys, semantic success/error.
+   ────────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Color · brand & neutrals ───────────────────────────── */
+  --color-ink: #050505; /* primary text / dark surfaces */
+  --color-paper: #f5f5f2; /* page background */
+  --color-card: #ffffff; /* raised surface */
+  --color-surface-muted: #e5e5df; /* image / placeholder fill */
+
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f2; /* = paper */
+  --color-neutral-200: #e5e5df; /* = surface-muted */
+  --color-neutral-300: #d9d9d9; /* = line */
+  --color-neutral-400: #999999; /* muted-on-dark labels */
+  --color-neutral-500: #777777; /* = muted */
+  --color-neutral-600: #555555;
+  --color-neutral-700: #444444;
+  --color-neutral-800: #333333;
+  --color-neutral-900: #050505; /* = ink */
+
+  --color-muted: #777777; /* secondary / meta text */
+  --color-line: #d9d9d9; /* hairline borders */
+
+  /* ── Color · semantic feedback ──────────────────────────── */
+  --color-success: #059669;
+  --color-success-fg: #065f46;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
+
+  --color-danger: #dc2626;
+  --color-danger-fg: #991b1b;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+
+  /* ── Typography · families ──────────────────────────────── */
+  --font-sans: var(--font-plus-jakarta), Arial, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+
+  /* ── Typography · weights ───────────────────────────────── */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* ── Typography · fluid display sizes ───────────────────── */
+  --text-eyebrow: 0.72rem;
+  --text-display: clamp(4.5rem, 14vw, 15.5rem);
+  --text-headline: clamp(3.5rem, 9vw, 10rem);
+
+  /* ── Typography · tracking / leading ────────────────────── */
+  --tracking-eyebrow: 0.12em;
+  --tracking-button: 0.08em;
+  --leading-display: 0.8;
+  --leading-headline: 0.84;
+  --leading-snug: 1.4;
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --radius-sm: 14px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* ── Shadows ────────────────────────────────────────────── */
+  --shadow-toast: 0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+
+  /* ── Motion · durations ─────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-base: 180ms;
+  --duration-slow: 350ms;
+  --duration-image: 500ms;
+  --duration-reveal: 650ms;
+
+  /* ── Motion · easings ───────────────────────────────────── */
+  --ease-standard: ease;
+  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --layout-shell-max: 1320px;
+  --layout-shell-gutter: 40px;
+  --layout-shell-gutter-sm: 32px;
+  --space-section: clamp(72px, 9vw, 144px);
+
+  /* ── Z-index ────────────────────────────────────────────── */
+  --z-toast: 9999;
 }
 
+/* Semantic aliases kept for backwards-compat with existing
+   var() references throughout the components. */
+:root {
+  color-scheme: light;
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+  --muted: var(--color-muted);
+  --border: var(--color-line);
+  --card: var(--color-card);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   DARK THEME
+   Re-point the SAME token names to a dark palette. Every utility
+   (bg-paper, text-ink, border-line, text-neutral-*, …) and every
+   var(--color-*) reference flips automatically — no component
+   needs theme-specific classes.
+   Activated by `data-theme="dark"` on <html> (see RootLayout).
+   ────────────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-ink: #ececE7; /* primary text / light surfaces */
+  --color-paper: #0a0a0b; /* page background */
+  --color-card: #141416; /* raised surface */
+  --color-surface-muted: #1c1c1f; /* image / placeholder fill */
+
+  --color-neutral-50: #161618;
+  --color-neutral-100: #1c1c1f;
+  --color-neutral-200: #232327;
+  --color-neutral-300: #34343a;
+  --color-neutral-400: #6e6e73;
+  --color-neutral-500: #9a9a9e;
+  --color-neutral-600: #b2b2b4;
+  --color-neutral-700: #c7c7c8;
+  --color-neutral-800: #dadad9;
+  --color-neutral-900: #ececE7;
+
+  --color-muted: #8e8e92;
+  --color-line: #2a2a2e;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   INVERSE SURFACE
+   A self-contained block that always reads as the OPPOSITE of the
+   page (dark slab on a light page, light slab on a dark page).
+   It locally overrides the base tokens, so child elements can use
+   the ordinary semantic utilities (text-ink, text-muted,
+   border-line, button-pill …) and they invert correctly.
+   ────────────────────────────────────────────────────────────── */
+.surface-inverse {
+  color-scheme: dark;
+  --color-ink: #ececE7;
+  --color-paper: #0a0a0b;
+  --color-card: #141416;
+  --color-surface-muted: #1c1c1f;
+  --color-line: #2a2a2e;
+  --color-muted: #8e8e92;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+:root[data-theme="dark"] .surface-inverse {
+  color-scheme: light;
+  --color-ink: #050505;
+  --color-paper: #f5f5f2;
+  --color-card: #ffffff;
+  --color-surface-muted: #e5e5df;
+  --color-line: #d9d9d9;
+  --color-muted: #777777;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   BASE
+   ────────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -20,8 +181,10 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-plus-jakarta), Arial, sans-serif;
+  font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background var(--duration-slow) var(--ease-standard),
+    color var(--duration-slow) var(--ease-standard);
 }
 
 a {
@@ -36,52 +199,77 @@ select {
   font: inherit;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   LAYOUT PRIMITIVES
+   ────────────────────────────────────────────────────────────── */
 .container-shell {
-  width: min(calc(100% - 40px), 1320px);
+  width: min(
+    calc(100% - var(--layout-shell-gutter)),
+    var(--layout-shell-max)
+  );
   margin-inline: auto;
 }
 
 .section-pad {
-  padding-block: clamp(72px, 9vw, 144px);
+  padding-block: var(--space-section);
 }
 
+/* ──────────────────────────────────────────────────────────────
+   TYPOGRAPHY
+   ────────────────────────────────────────────────────────────── */
 .eyebrow {
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
 .display-type {
-  font-size: clamp(4.5rem, 14vw, 15.5rem);
-  font-weight: 900;
-  line-height: 0.8;
+  font-size: var(--text-display);
+  font-weight: var(--font-weight-black);
+  line-height: var(--leading-display);
   letter-spacing: 0;
   text-transform: uppercase;
+}
+
+/* Elegant editorial serif — used for the hero showcase headline.
+   Mix with `font-sans` utilities on individual words for an
+   editorial serif + sans pairing. */
+.display-serif {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-regular);
+  font-size: clamp(2.6rem, 6vw, 5.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
 }
 
 .headline-type {
-  font-size: clamp(3.5rem, 9vw, 10rem);
-  font-weight: 900;
-  line-height: 0.84;
+  font-size: var(--text-headline);
+  font-weight: var(--font-weight-black);
+  line-height: var(--leading-headline);
   letter-spacing: 0;
   text-transform: uppercase;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   BUTTONS
+   ────────────────────────────────────────────────────────────── */
 .button-pill {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  border: 1px solid #050505;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-ink);
   padding: 0 22px;
   font-size: 0.74rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-black);
+  letter-spacing: var(--tracking-button);
   text-transform: uppercase;
-  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+  transition: background var(--duration-base) var(--ease-standard),
+    color var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
 }
 
 .button-pill:hover {
@@ -89,34 +277,40 @@ select {
 }
 
 .button-dark {
-  background: #050505;
-  color: #ffffff;
+  background: var(--color-ink);
+  color: var(--color-card);
 }
 
 .button-light {
   background: transparent;
-  color: #050505;
+  color: var(--color-ink);
 }
 
+/* ──────────────────────────────────────────────────────────────
+   MEDIA
+   ────────────────────────────────────────────────────────────── */
 .editorial-image {
   overflow: hidden;
-  border-radius: 22px;
-  background: #e5e5df;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-muted);
 }
 
 .editorial-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 500ms ease;
+  transition: transform var(--duration-image) var(--ease-standard);
 }
 
 .editorial-image:hover img {
   transform: scale(1.025);
 }
 
+/* ──────────────────────────────────────────────────────────────
+   MOTION HELPERS
+   ────────────────────────────────────────────────────────────── */
 .reveal-lite {
-  animation: reveal-lite 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: reveal-lite var(--duration-reveal) var(--ease-emphasized) both;
 }
 
 .reveal-lite-delay {
@@ -128,23 +322,32 @@ select {
   contain-intrinsic-size: 1px 900px;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   FORM FIELDS
+   ────────────────────────────────────────────────────────────── */
 .field {
   width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: #ffffff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-card);
   padding: 16px 18px;
-  color: #050505;
+  color: var(--color-ink);
   outline: none;
 }
 
 .field:focus {
-  border-color: #050505;
+  border-color: var(--color-ink);
 }
 
+/* ──────────────────────────────────────────────────────────────
+   RESPONSIVE OVERRIDES
+   ────────────────────────────────────────────────────────────── */
 @media (max-width: 760px) {
   .container-shell {
-    width: min(calc(100% - 32px), 1320px);
+    width: min(
+      calc(100% - var(--layout-shell-gutter-sm)),
+      var(--layout-shell-max)
+    );
   }
 
   .display-type {
@@ -182,13 +385,14 @@ select {
   }
 }
 
-/* ─── Toast Notifications ─────────────────────────────── */
-
+/* ──────────────────────────────────────────────────────────────
+   TOAST NOTIFICATIONS
+   ────────────────────────────────────────────────────────────── */
 .toast-container {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 9999;
+  z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -204,27 +408,25 @@ select {
   min-width: 300px;
   max-width: 420px;
   padding: 14px 40px 14px 16px;
-  border-radius: 14px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 700;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.08);
-  animation: toast-slide-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-toast);
+  animation: toast-slide-in var(--duration-slow) var(--ease-emphasized) both;
 }
 
 .toast-success {
-  background: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background: var(--color-success-bg);
+  color: var(--color-success-fg);
+  border: 1px solid var(--color-success-border);
 }
 
 .toast-error {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-fg);
+  border: 1px solid var(--color-danger-border);
 }
 
 .toast-icon {
@@ -235,16 +437,16 @@ select {
 }
 
 .toast-success .toast-icon {
-  color: #059669;
+  color: var(--color-success);
 }
 
 .toast-error .toast-icon {
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 .toast-message {
   flex: 1;
-  line-height: 1.4;
+  line-height: var(--leading-snug);
 }
 
 .toast-close {
@@ -257,7 +459,7 @@ select {
   line-height: 1;
   cursor: pointer;
   opacity: 0.4;
-  transition: opacity 150ms ease;
+  transition: opacity var(--duration-fast) var(--ease-standard);
   padding: 2px 6px;
 }
 
@@ -266,11 +468,11 @@ select {
 }
 
 .toast-success .toast-close {
-  color: #065f46;
+  color: var(--color-success-fg);
 }
 
 .toast-error .toast-close {
-  color: #991b1b;
+  color: var(--color-danger-fg);
 }
 
 .toast-progress {
@@ -278,16 +480,16 @@ select {
   bottom: 0;
   left: 0;
   height: 3px;
-  border-radius: 0 0 14px 14px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   animation: toast-progress-shrink linear forwards;
 }
 
 .toast-success .toast-progress {
-  background: #059669;
+  background: var(--color-success);
 }
 
 .toast-error .toast-progress {
-  background: #dc2626;
+  background: var(--color-danger);
 }
 
 @keyframes toast-slide-in {

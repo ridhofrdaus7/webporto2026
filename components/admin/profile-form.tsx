@@ -40,7 +40,7 @@ export function ProfileForm({ profile }: { profile: ProfileInput }) {
         <button className="button-pill button-dark" disabled={isSubmitting}>
           {isSubmitting ? "Saving" : "Save Profile"}
         </button>
-        {message ? <p className="font-semibold text-[#777]">{message}</p> : null}
+        {message ? <p className="font-semibold text-muted">{message}</p> : null}
       </div>
     </form>
   );

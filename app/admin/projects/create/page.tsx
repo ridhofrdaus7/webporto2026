@@ -13,7 +13,7 @@ export default async function CreateProjectPage() {
   return (
     <AdminShell>
       <div className="grid gap-8">
-        <div className="border-b border-[#d9d9d9] pb-8">
+        <div className="border-b border-line pb-8">
           <p className="eyebrow">Create Project</p>
           <h1 className="mt-3 text-6xl font-black uppercase leading-none">New Case Study</h1>
         </div>

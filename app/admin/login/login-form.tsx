@@ -36,7 +36,7 @@ export function LoginForm() {
     <form action={submit} className="grid gap-4">
       <input name="email" type="email" required className="field" placeholder="Admin email" />
       <input name="password" type="password" required className="field" placeholder="Password" />
-      <div className="min-h-6 text-sm font-bold text-[#777777]">{error}</div>
+      <div className="min-h-6 text-sm font-bold text-muted">{error}</div>
       <button className="button-pill button-dark w-fit" disabled={loading}>
         {loading ? "Checking..." : "Login"}
       </button>

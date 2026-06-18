@@ -1,123 +1,139 @@
-import Image from "next/image";
 import Link from "next/link";
+import { FeaturedSlider } from "@/components/public/featured-slider";
+import { HeroShowcase } from "@/components/public/hero-showcase";
 import { ProjectCard } from "@/components/public/project-card";
 import { PublicHeader } from "@/components/public/public-header";
+import { Reveal } from "@/components/scroll/reveal";
+import { RevealText } from "@/components/scroll/reveal-text";
 import { getProfile, getPublishedProjectCards } from "@/lib/portfolio";
 
 export default async function HomePage() {
   const [projects, profile] = await Promise.all([getPublishedProjectCards(), getProfile()]);
-  const featured = projects[0];
   const grid = projects.slice(1, 3);
+
+  // `projects` is newest-first; reverse so the hero showcases the
+  // earliest-uploaded work, while newer work stays in the sections below.
+  const seenThumbs = new Set<string>();
+  const heroItems = [...projects]
+    .reverse()
+    .filter((project) => {
+      if (!project.thumbnailUrl || seenThumbs.has(project.thumbnailUrl)) return false;
+      seenThumbs.add(project.thumbnailUrl);
+      return true;
+    })
+    .slice(0, 6)
+    .map((project) => ({
+      src: project.thumbnailUrl,
+      title: project.title,
+      slug: project.slug
+    }));
+
+  // Featured slider — every project (unique covers), newest first.
+  const seenFeatured = new Set<string>();
+  const featuredItems = projects
+    .filter((project) => {
+      if (!project.thumbnailUrl || seenFeatured.has(project.thumbnailUrl)) return false;
+      seenFeatured.add(project.thumbnailUrl);
+      return true;
+    })
+    .map((project) => ({
+      slug: project.slug,
+      title: project.title,
+      clientName: project.clientName,
+      year: project.year,
+      thumbnailUrl: project.thumbnailUrl
+    }));
 
   return (
     <main>
       <PublicHeader />
-      <section className="container-shell py-16 sm:py-24">
-        <div className="grid gap-10">
-          <div>
-            <p className="eyebrow">Portfolio / Creative Designer</p>
-            <h1 className="display-type mt-5 max-w-[12ch]">BUILT — INTENT</h1>
-          </div>
-          <div className="grid gap-8 border-t border-[#d9d9d9] pt-8 md:grid-cols-[1fr_auto] md:items-end">
-            <p className="max-w-2xl text-xl font-medium leading-8 text-[#333333] sm:text-2xl">
-              Graphic design, video editing, and digital campaign visuals crafted for brands.
+      <HeroShowcase
+        items={heroItems}
+        eyebrow="Portfolio / Creative Designer"
+        headline={
+          <>
+            Built <span className="italic">with</span>{" "}
+            <span className="font-sans font-extrabold tracking-tight">intent.</span>
+          </>
+        }
+        subline="Creative, story & production for brands that want to stand out."
+      />
+
+      <section className="container-shell border-y border-line py-14">
+        <Reveal>
+          <div className="grid gap-8 md:grid-cols-[0.35fr_1fr]">
+            <p className="eyebrow">Selected works</p>
+            <p className="max-w-4xl text-3xl font-black uppercase leading-[0.98] sm:text-5xl">
+              Selected works from social media campaigns, product catalogs, video edits,
+              and AI-assisted creative production.
             </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <Link href="/portfolio" className="button-pill button-dark">
-                View Works
-              </Link>
-              <Link href="/contact" className="button-pill button-light">
-                Hire Me
-              </Link>
-            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
-      <section className="container-shell border-y border-[#d9d9d9] py-14">
-        <div className="grid gap-8 md:grid-cols-[0.35fr_1fr]">
-          <p className="eyebrow">Selected works</p>
-          <p className="max-w-4xl text-3xl font-black uppercase leading-[0.98] sm:text-5xl">
-            Selected works from social media campaigns, product catalogs, video edits,
-            and AI-assisted creative production.
-          </p>
-        </div>
-      </section>
-
-      {featured && (
+      {featuredItems.length > 0 && (
         <section className="container-shell section-pad">
-          <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-            <div className="reveal-lite">
-              <div className="editorial-image aspect-[1.05/1]">
-                <Image
-                  src={featured.thumbnailUrl}
-                  alt={featured.title}
-                  width={1200}
-                  height={1200}
-                  sizes="(min-width: 1024px) 56vw, calc(100vw - 40px)"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="reveal-lite reveal-lite-delay">
-              <p className="eyebrow">Featured Work / {featured.year}</p>
-              <h2 className="mt-4 text-5xl font-black uppercase leading-none sm:text-7xl">
-                {featured.title}
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-[#555555]">{featured.shortDescription}</p>
-              <div className="mt-8 grid grid-cols-2 gap-4 border-y border-[#d9d9d9] py-5 text-xs font-black uppercase text-[#777777]">
-                <p>Client<br /><span className="text-[#050505]">{featured.clientName}</span></p>
-                <p>Category<br /><span className="text-[#050505]">{featured.category.name}</span></p>
-              </div>
-              <Link href={`/portfolio/${featured.slug}`} className="button-pill button-dark mt-8">
-                View Case Study
-              </Link>
-            </div>
-          </div>
+          <Reveal>
+            <FeaturedSlider items={featuredItems} />
+          </Reveal>
         </section>
       )}
 
       <section className="container-shell pb-24">
-        <div className="mb-9 flex items-end justify-between border-t border-[#d9d9d9] pt-8">
-          <h2 className="headline-type max-w-[10ch]">WORK ARCHIVE</h2>
+        <div className="mb-9 flex items-end justify-between border-t border-line pt-8">
+          <RevealText as="h2" className="headline-type max-w-[10ch]">
+            WORK ARCHIVE
+          </RevealText>
           <Link href="/portfolio" className="button-pill button-light hidden sm:inline-flex">
             View All Work
           </Link>
         </div>
         <div className="grid gap-10 md:grid-cols-2">
-          {grid.map((project) => (
-            <ProjectCard key={project.id} project={project} sizes="(min-width: 768px) 50vw, calc(100vw - 40px)" />
+          {grid.map((project, index) => (
+            <Reveal key={project.id} delay={index * 0.08}>
+              <ProjectCard project={project} sizes="(min-width: 768px) 50vw, calc(100vw - 40px)" />
+            </Reveal>
           ))}
         </div>
       </section>
 
-      <section className="bg-[#050505] py-24 text-white">
+      <section className="surface-inverse py-24">
         <div className="container-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <p className="eyebrow text-[#9a9a9a]">About Preview</p>
-            <h2 className="mt-4 text-5xl font-black uppercase leading-none sm:text-8xl">
+            <RevealText as="p" className="eyebrow text-muted">
+              About Preview
+            </RevealText>
+            <RevealText
+              as="h2"
+              className="mt-4 text-5xl font-black uppercase leading-none sm:text-8xl"
+              delay={0.06}
+            >
               VISUAL SYSTEMS MADE FOR IMPACT
-            </h2>
+            </RevealText>
           </div>
-          <div className="self-end">
-            <p className="text-2xl font-semibold leading-9 text-[#d8d8d8]">{profile.bio}</p>
-            <div className="mt-8 grid gap-4 border-y border-[#333333] py-6 text-sm font-black uppercase text-[#999999] sm:grid-cols-2">
-              <p>Skills<br /><span className="text-white">Design / Video / Campaign</span></p>
-              <p>Tools<br /><span className="text-white">Photoshop / Figma / CapCut</span></p>
+          <Reveal className="self-end" delay={0.12}>
+            <p className="text-2xl font-semibold leading-9">{profile.bio}</p>
+            <div className="mt-8 grid gap-4 border-y border-line py-6 text-sm font-black uppercase text-muted sm:grid-cols-2">
+              <p>Skills<br /><span className="text-ink">Design / Video / Campaign</span></p>
+              <p>Tools<br /><span className="text-ink">Photoshop / Figma / CapCut</span></p>
             </div>
-            <Link href="/about" className="button-pill mt-8 border-white text-white">
+            <Link href="/about" className="button-pill button-light mt-8">
               About Ridho
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="container-shell section-pad">
         <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
-          <h2 className="headline-type max-w-[12ch]">LET&apos;S BUILD SOMETHING VISUAL</h2>
-          <Link href="/contact" className="button-pill button-dark w-fit">
-            Contact
-          </Link>
+          <RevealText as="h2" className="headline-type max-w-[12ch]">
+            LET&apos;S BUILD SOMETHING VISUAL
+          </RevealText>
+          <Reveal delay={0.1}>
+            <Link href="/contact" className="button-pill button-dark w-fit">
+              Contact
+            </Link>
+          </Reveal>
         </div>
       </section>
     </main>

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "@/components/public/contact-form";
 import { PublicHeader } from "@/components/public/public-header";
+import { Reveal } from "@/components/scroll/reveal";
+import { RevealText } from "@/components/scroll/reveal-text";
 import { getProfile } from "@/lib/portfolio";
 
 export const metadata: Metadata = {
@@ -16,12 +18,16 @@ export default async function ContactPage() {
     <main>
       <PublicHeader />
       <section className="container-shell py-12 sm:py-20">
-        <p className="eyebrow">Contact / Hire Me</p>
-        <h1 className="display-type mt-5 max-w-[12ch]">LET&apos;S BUILD SOMETHING VISUAL</h1>
+        <RevealText as="p" className="eyebrow">
+          Contact / Hire Me
+        </RevealText>
+        <RevealText as="h1" className="display-type mt-5 max-w-[12ch]" delay={0.08}>
+          LET&apos;S BUILD SOMETHING VISUAL
+        </RevealText>
       </section>
       <section className="container-shell grid gap-12 pb-24 lg:grid-cols-[0.7fr_1fr]">
-        <aside className="border-y border-[#d9d9d9] py-8">
-          <p className="text-2xl font-semibold leading-9 text-[#444444]">
+        <Reveal as="aside" className="border-y border-line py-8">
+          <p className="text-2xl font-semibold leading-9 text-neutral-700">
             Send a project brief, campaign need, or collaboration idea. You can also reach Ridho directly through email, WhatsApp, or social links.
           </p>
           <div className="mt-8 grid gap-4 text-sm font-black uppercase">
@@ -30,7 +36,7 @@ export default async function ContactPage() {
             {profile.instagramUrl && <Link href={profile.instagramUrl}>Instagram</Link>}
             {profile.linkedinUrl && <Link href={profile.linkedinUrl}>LinkedIn</Link>}
           </div>
-        </aside>
+        </Reveal>
         <ContactForm />
       </section>
     </main>
