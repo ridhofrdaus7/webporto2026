@@ -43,6 +43,7 @@ Admin dapat:
 - Mengatur kategori portofolio.
 - Mengatur data profil pribadi.
 - Mengatur kontak dan link sosial media.
+- Memantau **Live Traffic / Realtime Visitors** (analytics pengunjung — admin-only).
 
 ### B. User Biasa / Visitor
 
@@ -255,6 +256,33 @@ Isi:
 - Total draft project.
 - Project terbaru.
 - Tombol tambah project.
+- Shortcut ke **Live Traffic**.
+
+---
+
+#### 2b. Live Traffic / Realtime Visitors (admin-only)
+
+URL:
+
+```text
+/admin/traffic
+```
+
+Isi:
+
+- **Online now** — jumlah pengunjung aktif realtime (jendela 60 detik).
+- Statistik: Today, Unique today, 7 hari, 30 hari, All time.
+- Grafik views 14 hari terakhir.
+- Top pages, Top referrers.
+- Devices & Countries (**dihitung per pengunjung unik**, bukan per kunjungan halaman).
+- Recent visits.
+
+Catatan:
+
+- Privat untuk admin (RLS aktif tanpa policy; hanya service-role yang menulis/membaca).
+- **Tanpa menyimpan IP/data pribadi** — pakai hash pengunjung ber-salt harian (zona WIB).
+- Auto-refresh tiap 7 detik (polling). Tidak melacak halaman `/admin`.
+- Data bisa di-reset: `npm run db:reset-analytics -- --yes`.
 
 ---
 
@@ -852,6 +880,7 @@ Product requirements:
 6. Each project has a detail page using a clean slug URL.
 7. Admin can manage profile data such as name, bio, profile image, email, WhatsApp, Instagram, LinkedIn, and CV file.
 8. Website must be responsive, clean, minimal, and professional.
+9. Admin can monitor privacy-first realtime traffic analytics at `/admin/traffic` (online-now, page views, top pages/referrers, devices, countries) without storing visitor IPs/PII.
 
 Design direction:
 - Minimal editorial creative portfolio

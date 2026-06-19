@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 
 const nav = [
   ["Dashboard", "/admin/dashboard"],
+  ["Live Traffic", "/admin/traffic"],
   ["Projects", "/admin/projects"],
   ["Create", "/admin/projects/create"],
   ["Brands", "/admin/brands"],

@@ -1,17 +1,9 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { TrafficPanel } from "@/components/admin/traffic-panel";
-import { getTrafficOverview } from "@/lib/analytics";
 import { getAdminDashboardData } from "@/lib/portfolio";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-
 export default async function DashboardPage() {
-  const [dashboard, traffic] = await Promise.all([
-    getAdminDashboardData(),
-    getTrafficOverview()
-  ]);
+  const dashboard = await getAdminDashboardData();
 
   return (
     <AdminShell>
@@ -21,10 +13,14 @@ export default async function DashboardPage() {
             <p className="eyebrow">Dashboard</p>
             <h1 className="mt-3 text-6xl font-black uppercase leading-none">Content Overview</h1>
           </div>
-          <Link href="/admin/projects/create" className="button-pill button-dark w-fit">New Project</Link>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/admin/traffic" className="button-pill button-light w-fit">
+              Live Traffic
+            </Link>
+            <Link href="/admin/projects/create" className="button-pill button-dark w-fit">New Project</Link>
+          </div>
         </div>
 
-        <TrafficPanel initial={traffic} />
         <div className="grid gap-4 md:grid-cols-3">
           {[
             ["Total Projects", dashboard.total],
