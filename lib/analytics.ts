@@ -69,6 +69,7 @@ type WindowRow = {
   browser: string | null;
   country: string | null;
   visitor_hash: string | null;
+  session_id: string | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -248,6 +249,20 @@ function topN(tally: Map<string, number>, n: number): TrafficCount[] {
     .map(([label, value]) => ({ label, value }));
 }
 
+function addVisitor(map: Map<string, Set<string>>, key: string, visitorId: string): void {
+  const set = map.get(key);
+  if (set) set.add(visitorId);
+  else map.set(key, new Set([visitorId]));
+}
+
+/** Rank by number of DISTINCT visitors (not page views) per bucket. */
+function topNDistinct(map: Map<string, Set<string>>, n: number): TrafficCount[] {
+  return [...map.entries()]
+    .map(([label, set]) => ({ label, value: set.size }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, n);
+}
+
 function emptyOverview(available: boolean): TrafficOverview {
   const now = new Date();
   return {
@@ -292,7 +307,7 @@ export async function getTrafficOverview(): Promise<TrafficOverview> {
       await Promise.all([
         supabase
           .from("page_views")
-          .select("created_at, path, referrer, device, browser, country, visitor_hash")
+          .select("created_at, path, referrer, device, browser, country, visitor_hash, session_id")
           .eq("is_bot", false)
           .gte("created_at", since30.toISOString())
           .order("created_at", { ascending: false })
@@ -322,22 +337,28 @@ export async function getTrafficOverview(): Promise<TrafficOverview> {
     const series = buildSeriesSkeleton(now);
     const pageTally = new Map<string, number>();
     const refTally = new Map<string, number>();
-    const deviceTally = new Map<string, number>();
-    const countryTally = new Map<string, number>();
+    // Devices/countries are counted per DISTINCT visitor (session), so one
+    // person browsing several pages stays a single visitor — not one per view.
+    const deviceVisitors = new Map<string, Set<string>>();
+    const countryVisitors = new Map<string, Set<string>>();
     const uniqueToday = new Set<string>();
 
-    for (const row of rows) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
       const created = new Date(row.created_at);
       const point = series.get(jakartaDayKey(created));
       if (point) point.views += 1;
 
       if (created >= todayStart && row.visitor_hash) uniqueToday.add(row.visitor_hash);
 
+      // Stable per-visitor key (fall back so a row is never miscounted as 0).
+      const visitorId = row.session_id ?? row.visitor_hash ?? `row-${i}`;
+
       pageTally.set(row.path, (pageTally.get(row.path) ?? 0) + 1);
       const ref = cleanReferrer(row.referrer);
       if (ref) refTally.set(ref, (refTally.get(ref) ?? 0) + 1);
-      if (row.device) deviceTally.set(row.device, (deviceTally.get(row.device) ?? 0) + 1);
-      if (row.country) countryTally.set(row.country, (countryTally.get(row.country) ?? 0) + 1);
+      if (row.device) addVisitor(deviceVisitors, row.device, visitorId);
+      if (row.country) addVisitor(countryVisitors, row.country, visitorId);
     }
 
     const recent: RecentView[] = (recentRes.data ?? []).map((r) => {
@@ -362,8 +383,8 @@ export async function getTrafficOverview(): Promise<TrafficOverview> {
       series: [...series.values()],
       topPages: topN(pageTally, 6),
       topReferrers: topN(refTally, 6),
-      devices: topN(deviceTally, 4),
-      countries: topN(countryTally, 6),
+      devices: topNDistinct(deviceVisitors, 4),
+      countries: topNDistinct(countryVisitors, 6),
       recent,
       generatedAt: now.toISOString()
     };
