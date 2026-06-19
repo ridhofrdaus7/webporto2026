@@ -4,6 +4,7 @@ import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/admin/toast";
 import { ToastFromParams } from "@/components/admin/toast-params";
+import { AnalyticsBeacon } from "@/components/public/analytics-beacon";
 import { ScrollProgress } from "@/components/scroll/scroll-progress";
 
 // Runs before paint to set the theme from storage / OS preference,
@@ -47,6 +48,7 @@ export default function RootLayout({
       </head>
       <body className={`${plusJakarta.variable} ${instrumentSerif.variable}`}>
         <ScrollProgress />
+        <AnalyticsBeacon />
         <ToastProvider>
           {children}
           <Suspense>

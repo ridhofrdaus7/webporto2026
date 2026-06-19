@@ -146,6 +146,49 @@ create policy "public insert contact messages" on public.contact_messages
   for insert with check (true);
 
 -- ---------------------------------------------------------------------------
+-- Traffic analytics (admin-only)
+-- Rows are written by the service-role key via /api/track and read by the
+-- admin dashboard via /api/admin/traffic. RLS is enabled with NO policies, so
+-- the anon/public key can neither read nor write — traffic stays private to
+-- the site owner. No raw IP or personal data is stored: `visitor_hash` is a
+-- salted-daily SHA-256 (rotates every day, not reversible to an IP).
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.page_views (
+  id           uuid primary key default gen_random_uuid(),
+  path         text not null,
+  referrer     text,
+  visitor_hash text,
+  session_id   text,
+  device       text,
+  browser      text,
+  country      text,
+  is_bot       boolean not null default false,
+  created_at   timestamptz not null default now()
+);
+create index if not exists page_views_created_idx on public.page_views(created_at desc);
+create index if not exists page_views_path_idx on public.page_views(path);
+
+-- One upserted row per live session; "online now" = rows seen in the last 60s.
+create table if not exists public.active_sessions (
+  session_id text primary key,
+  path       text,
+  device     text,
+  country    text,
+  last_seen  timestamptz not null default now()
+);
+create index if not exists active_sessions_last_seen_idx on public.active_sessions(last_seen desc);
+-- The app already reaps stale rows opportunistically. If you prefer a scheduled
+-- sweep instead, enable pg_cron and uncomment:
+--   select cron.schedule('reap-active-sessions', '*/5 * * * *',
+--     $$delete from public.active_sessions where last_seen < now() - interval '5 minutes'$$);
+
+alter table public.page_views enable row level security;
+alter table public.active_sessions enable row level security;
+-- Intentionally NO policies: only the service-role key (which bypasses RLS)
+-- may touch these tables. Keeps analytics invisible to the public anon key.
+
+-- ---------------------------------------------------------------------------
 -- Storage bucket for uploaded media (public read).
 -- ---------------------------------------------------------------------------
 

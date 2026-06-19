@@ -134,6 +134,18 @@
 
   --color-muted: #8e8e92;
   --color-line: #2a2a2e;
+
+  /* Re-point semantic status tokens so badges/toasts read as dark surfaces
+     instead of bright light chips islanded on the dark UI. */
+  --color-success: #34d399;
+  --color-success-fg: #6ee7b7;
+  --color-success-bg: #0c2a22;
+  --color-success-border: #14503f;
+
+  --color-danger: #f87171;
+  --color-danger-fg: #fca5a5;
+  --color-danger-bg: #2a1112;
+  --color-danger-border: #5a1f20;
 }
 
 /* ──────────────────────────────────────────────────────────────
