@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/admin/toast";
@@ -43,10 +44,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className={`${plusJakarta.variable} ${instrumentSerif.variable}`}>
+        {/* Sets the theme from storage/OS before paint (no flash). `beforeInteractive`
+            is injected into the head and runs ahead of hydration — and avoids React
+            19's "script inside a component" warning from a raw <script> tag. */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <ScrollProgress />
         <AnalyticsBeacon />
         <ToastProvider>

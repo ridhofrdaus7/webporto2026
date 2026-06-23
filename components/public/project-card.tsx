@@ -15,15 +15,23 @@ type ProjectCardProps = {
   project: ProjectCardProject;
   priority?: boolean;
   sizes?: string;
+  /**
+   * Title type-scale classes. Defaults to viewport breakpoints (homepage).
+   * The portfolio grid passes CONTAINER-query classes so the title tracks
+   * the card's own width as the user resizes cards — needs `@container` on
+   * the root (always set below).
+   */
+  titleClassName?: string;
 };
 
 export function ProjectCard({
   project,
   priority = false,
-  sizes = "(min-width: 768px) 50vw, 100vw"
+  sizes = "(min-width: 768px) 50vw, 100vw",
+  titleClassName = "text-2xl sm:text-4xl"
 }: ProjectCardProps) {
   return (
-    <Link href={`/portfolio/${project.slug}`} className="content-auto group block">
+    <Link href={`/portfolio/${project.slug}`} className="group block @container">
       <div className="editorial-image aspect-[1.18/1]">
         <Image
           src={project.thumbnailUrl}
@@ -37,7 +45,7 @@ export function ProjectCard({
       <div className="mt-5 flex items-start justify-between gap-4 border-t border-line pt-4">
         <div>
           <p className="eyebrow">{project.catalog?.name ?? project.category.name}</p>
-          <h3 className="mt-2 text-2xl font-black uppercase leading-none sm:text-4xl">
+          <h3 className={`mt-2 font-black uppercase leading-none ${titleClassName}`}>
             {project.title}
           </h3>
         </div>

@@ -13,10 +13,10 @@ type HeroVideoProps = {
 
 export function HeroVideo({ videoSrc, eyebrow, headline, subline }: HeroVideoProps) {
   return (
-    <section className="hero-video relative flex min-h-[88vh] w-full items-center justify-center overflow-hidden text-white">
-      {/* Full-bleed background video */}
+    <section className="hero-video relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden text-white">
+      {/* Full-bleed 16:9 video — fills the whole hero, no blur, no bars */}
       <video
-        className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
+        className="absolute inset-0 h-full w-full object-cover"
         autoPlay
         muted
         loop
@@ -27,8 +27,8 @@ export function HeroVideo({ videoSrc, eyebrow, headline, subline }: HeroVideoPro
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* Light overall tint (keeps the video visible) + focused scrim behind text */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Tint + focused scrim keep the white headline readable over the video */}
+      <div className="absolute inset-0 bg-black/25" />
       <div className="hero-scrim absolute inset-0" />
 
       {/* Content */}
