@@ -195,6 +195,64 @@
 }
 
 /* ──────────────────────────────────────────────────────────────
+   CHAPTER NAVIGATION  (sticky cinematic card deck)
+   An always-dark "theater" stage that frames the stacking chapter
+   cards — the SAME documented dark-hero exception as .hero-video, so
+   the deck reads cinematic in BOTH light and dark themes instead of
+   flipping with the page tokens (text over it is explicit white).
+   See components/public/sticky-card-nav.tsx.
+   ────────────────────────────────────────────────────────────── */
+.chapter-stage {
+  background: radial-gradient(
+    125% 85% at 50% -8%,
+    #1b1b22 0%,
+    #0b0b0e 52%,
+    #060607 100%
+  );
+  color: #f4f4f0;
+}
+
+/* Theatrical vignette — the stage edges fall into shadow so the lit
+   card pops. Sits above the stage background, below the cards. */
+.chapter-vignette {
+  background: radial-gradient(
+    78% 62% at 50% 44%,
+    transparent 48%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Floating depth under each card in the deck. */
+.chapter-card {
+  box-shadow: 0 50px 130px -40px rgba(0, 0, 0, 0.85),
+    0 12px 40px -12px rgba(0, 0, 0, 0.55);
+}
+
+/* No-image fallback for a chapter card — a textured dark panel so the
+   typographic content still reads as an intentional editorial card. */
+.chapter-card-blank {
+  background: radial-gradient(
+    120% 120% at 50% 0%,
+    #232329 0%,
+    #111114 55%,
+    #08080a 100%
+  );
+}
+
+/* Legibility scrim over the card photography — light at the top third,
+   deepening at the base where the title + CTA sit. */
+.chapter-scrim {
+  background: linear-gradient(
+    176deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.05) 26%,
+    rgba(0, 0, 0, 0.1) 48%,
+    rgba(0, 0, 0, 0.62) 76%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────
    SMART HEADER
    Smooth colour/frost transitions; currentColor focus rings that
    stay visible over BOTH the bright hero video and paper pages.
@@ -342,6 +400,26 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Lenis smooth-scroll (used by the featured parallax gallery). When active it
+   adds .lenis/.lenis-smooth to <html>; these rules hand scroll control to JS
+   so it doesn't fight the native `scroll-behavior: smooth` above. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   background: var(--background);
@@ -482,9 +560,17 @@ select {
   animation-delay: 100ms;
 }
 
-.content-auto {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
+/* ──────────────────────────────────────────────────────────────
+   SCATTER → CONVERGE HEADLINES
+   3D stage giving the per-letter rotateX its depth as the headline
+   scrolls into view (see components/scroll/converge-scroll.tsx).
+   ────────────────────────────────────────────────────────────── */
+.scene-stage {
+  perspective: 1100px;
+}
+
+.scene-3d {
+  transform-style: preserve-3d;
 }
 
 /* ──────────────────────────────────────────────────────────────

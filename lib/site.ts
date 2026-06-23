@@ -13,6 +13,15 @@ export const siteContact = {
 
 export const portfolioPdfUrl = "/Ridho-Firdaus-Portfolio.pdf";
 
+/**
+ * Ridho's "Hello" intro banner (photo + name + bio — a finished light 16:9
+ * composition). Used in three places: the /about page hero, the homepage light
+ * intro band, and the homepage deck's About card (rendered "bare" — framed on the
+ * dark stage with no overlay, since it's a light, self-contained composition).
+ * Lives in public/.
+ */
+export const aboutHeroImage = "/about-hero.png";
+
 export type Service = {
   title: string;
   role: string;

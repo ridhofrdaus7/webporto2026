@@ -1,20 +1,20 @@
 import Link from "next/link";
 import { FeaturedSlider } from "@/components/public/featured-slider";
 import { HeroVideo } from "@/components/public/hero-video";
-import { ProjectCard } from "@/components/public/project-card";
 import { PublicHeader } from "@/components/public/public-header";
 import { ServicesSection } from "@/components/public/services-section";
+import { StickyCardNav, type Chapter } from "@/components/public/sticky-card-nav";
 import { Testimonials } from "@/components/public/testimonials";
+import { ConvergeHeadline } from "@/components/scroll/converge-scroll";
 import { Reveal } from "@/components/scroll/reveal";
 import { RevealText } from "@/components/scroll/reveal-text";
 import { getProfile, getPublishedProjectCards } from "@/lib/portfolio";
-import { getBrandBlurb, portfolioPdfUrl, siteContact } from "@/lib/site";
+import { aboutHeroImage, getBrandBlurb, portfolioPdfUrl, siteContact } from "@/lib/site";
 
 export default async function HomePage() {
   const [projects, profile] = await Promise.all([getPublishedProjectCards(), getProfile()]);
-  const grid = projects.slice(1, 3);
 
-  // Featured slider — the first 7 uploaded projects (oldest first), unique covers.
+  // Featured gallery — the first 14 uploaded projects (oldest first), unique covers.
   const seenFeatured = new Set<string>();
   const featuredItems = [...projects]
     .reverse()
@@ -23,7 +23,7 @@ export default async function HomePage() {
       seenFeatured.add(project.thumbnailUrl);
       return true;
     })
-    .slice(0, 7)
+    .slice(0, 14)
     .map((project) => ({
       slug: project.slug,
       title: project.title,
@@ -33,11 +33,95 @@ export default async function HomePage() {
       blurb: getBrandBlurb(project.clientName)
     }));
 
+  // Chapter covers are HAND-PICKED so they never duplicate and each image truly
+  // represents its pillar. `resolveCover(pick, i)` accepts: a published project's
+  // slug (resolved to its thumbnail), a /public path, or an allowed image URL.
+  // An empty `pick` falls back to a DISTINCT auto cover (deduped, newest-first).
+  // 👉 To curate a chapter, set its `pick` (1st arg) to your chosen slug/URL/path.
+  const uniqueCovers = Array.from(
+    new Set(projects.map((project) => project.thumbnailUrl).filter(Boolean))
+  );
+  const bySlug = (slug: string) => projects.find((project) => project.slug === slug)?.thumbnailUrl;
+  const resolveCover = (pick: string, autoIndex: number) => {
+    const value = pick.trim();
+    // A value with "/" or "." is used literally (a /public path or image URL); a
+    // bare token is treated as a project slug and degrades to the deduped auto
+    // cover when it doesn't resolve — so a slug typo never becomes a broken src.
+    const resolved = value ? (/[/.]/.test(value) ? value : bySlug(value)) : undefined;
+    return resolved || uniqueCovers[autoIndex] || "";
+  };
+
+  // The deck IS the homepage's primary navigation: four work pillars that
+  // resolve on an About chapter, pulling the visitor down toward the story.
+  const chapters: Chapter[] = [
+    {
+      id: "social",
+      index: "01",
+      kicker: "Social & Campaign",
+      title: "SOCIAL\nCONTENT",
+      teaser:
+        "Sistem konten feed, story & carousel yang tayang konsisten tiap minggu — dan bikin engagement naik.",
+      meta: "Social Media Design",
+      href: "/portfolio",
+      cta: "Lihat Karya",
+      image: resolveCover("", 0)
+    },
+    {
+      id: "catalog",
+      index: "02",
+      kicker: "E-commerce",
+      title: "PRODUCT\nCATALOGS",
+      teaser:
+        "Layout katalog & lookbook yang rapi dan meyakinkan — mempercepat launching dan membantu jualan online.",
+      meta: "Product Catalog",
+      href: "/portfolio",
+      cta: "Lihat Karya",
+      image: resolveCover("", 1)
+    },
+    {
+      id: "campaign",
+      index: "03",
+      kicker: "Key Visual",
+      title: "CAMPAIGN\nVISUALS",
+      teaser:
+        "Key visual & poster kampanye yang menonjol, menjangkau pasar lebih luas, dan dipakai berulang.",
+      meta: "Campaign Visual",
+      href: "/portfolio",
+      cta: "Lihat Karya",
+      image: resolveCover("", 2)
+    },
+    {
+      id: "motion",
+      index: "04",
+      kicker: "Motion / Reels",
+      title: "STORIES IN\nMOTION",
+      teaser:
+        "Edit reels & TikTok dengan pacing rapi, subtitle, dan color grading yang menjaga perhatian penonton.",
+      meta: "Video Editing",
+      href: "/portfolio",
+      cta: "Lihat Karya",
+      image: resolveCover("", 3)
+    },
+    {
+      id: "about",
+      index: "05",
+      kicker: "The Maker",
+      title: "ABOUT\nRIDHO",
+      teaser:
+        "Satu orang di balik setiap visual — teliti, komunikatif, dan fokus pada hasil yang benar-benar menjual.",
+      meta: "Profile / Story",
+      href: "/about",
+      cta: "Tentang Ridho",
+      image: aboutHeroImage,
+      bare: true
+    }
+  ];
+
   return (
     <main>
       <PublicHeader variant="overlay" />
       <HeroVideo
-        videoSrc="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260416_031918_443d301c-b6d9-4a18-b102-c946a16d86ad.mp4"
+        videoSrc="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260517_070729_32a7eb4e-d6e2-4571-badc-91b4dab1ecbe.mp4"
         eyebrow="Portfolio / Creative Designer"
         headline={
           <>
@@ -48,47 +132,32 @@ export default async function HomePage() {
         subline="Creative, story & production for brands that want to stand out."
       />
 
-      <section className="container-shell border-y border-line py-14">
-        <Reveal>
-          <div className="grid gap-8 md:grid-cols-[0.35fr_1fr]">
-            <p className="eyebrow">Selected works</p>
-            <p className="max-w-4xl text-3xl font-black uppercase leading-[0.98] sm:text-5xl">
-              Selected works from social media campaigns, product catalogs, video edits,
-              and AI-assisted creative production.
+      {/* Primary navigation — a cinematic chapter deck. Its dark stage flows
+          straight out of the hero video and funnels down into About. */}
+      <section className="chapter-stage relative overflow-hidden">
+        <div className="container-shell py-20 text-white sm:py-28">
+          <Reveal>
+            <p className="text-[0.72rem] font-extrabold uppercase tracking-[0.16em] text-white/50">
+              Explore — In Chapters
             </p>
-          </div>
-        </Reveal>
-      </section>
-
-      {featuredItems.length > 0 && (
-        <section className="w-full">
-          <Reveal className="h-full">
-            <FeaturedSlider items={featuredItems} />
           </Reveal>
-        </section>
-      )}
-
-      <ServicesSection />
-
-      <section className="container-shell pb-24">
-        <div className="mb-9 flex items-end justify-between border-t border-line pt-8">
-          <RevealText as="h2" className="headline-type max-w-[10ch]">
-            WORK ARCHIVE
+          <RevealText
+            as="h2"
+            className="mt-5 max-w-[18ch] text-4xl font-black uppercase leading-[0.92] sm:text-7xl"
+            delay={0.05}
+          >
+            Five chapters. One body of work.
           </RevealText>
-          <Link href="/portfolio" className="button-pill button-light hidden sm:inline-flex">
-            View All Work
-          </Link>
-        </div>
-        <div className="grid gap-10 md:grid-cols-2">
-          {grid.map((project, index) => (
-            <Reveal key={project.id} delay={index * 0.08}>
-              <ProjectCard project={project} sizes="(min-width: 768px) 50vw, calc(100vw - 40px)" />
-            </Reveal>
-          ))}
+          <Reveal delay={0.12}>
+            <p className="mt-6 max-w-xl text-base font-medium leading-8 text-white/70">
+              Scroll untuk menjelajah tiap bagian — dari konten sosial sampai cerita di
+              balik layar. Tiap kartu adalah pintu masuk ke karyanya.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      <Testimonials />
+      <StickyCardNav chapters={chapters} />
 
       <section className="surface-inverse py-24">
         <div className="container-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
@@ -96,13 +165,11 @@ export default async function HomePage() {
             <RevealText as="p" className="eyebrow text-muted">
               About Preview
             </RevealText>
-            <RevealText
+            <ConvergeHeadline
               as="h2"
               className="mt-4 text-5xl font-black uppercase leading-none sm:text-8xl"
-              delay={0.06}
-            >
-              VISUAL SYSTEMS MADE FOR IMPACT
-            </RevealText>
+              text="VISUAL SYSTEMS MADE FOR IMPACT"
+            />
           </div>
           <Reveal className="self-end" delay={0.12}>
             <p className="text-2xl font-semibold leading-9">{profile.bio}</p>
@@ -116,6 +183,12 @@ export default async function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      <ServicesSection />
+
+      {featuredItems.length > 0 && <FeaturedSlider items={featuredItems} />}
+
+      <Testimonials />
 
       <section className="container-shell section-pad">
         <div className="border-t border-line pt-8">

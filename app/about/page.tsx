@@ -4,7 +4,7 @@ import { PublicHeader } from "@/components/public/public-header";
 import { Reveal } from "@/components/scroll/reveal";
 import { RevealText } from "@/components/scroll/reveal-text";
 import { getProfile } from "@/lib/portfolio";
-import { siteContact } from "@/lib/site";
+import { aboutHeroImage, siteContact } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,7 +17,7 @@ export default async function AboutPage() {
   return (
     <main>
       <PublicHeader />
-      <section className="container-shell py-12 sm:py-20">
+      <section className="container-shell py-10 sm:py-14">
         <RevealText as="p" className="eyebrow">
           Profile
         </RevealText>
@@ -25,19 +25,30 @@ export default async function AboutPage() {
           RIDHO FIRDAUS
         </RevealText>
       </section>
-      <section className="container-shell grid gap-12 pb-24 lg:grid-cols-[0.9fr_1.1fr]">
-        <Reveal className="editorial-image aspect-[0.9/1]">
+
+      {/* Ridho's "Hello" banner — a finished light composition (photo + name + bio).
+          Full 16:9 on larger screens; a person-focused crop on phones, where the
+          baked text would be too small (the real bio sits below for content/SEO). */}
+      <section className="container-shell">
+        <Reveal className="editorial-image aspect-[4/5] sm:aspect-[16/9]">
           <Image
-            src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1200&q=80"
-            alt="Abstract editorial profile visual"
-            width={1000}
-            height={1200}
+            src={aboutHeroImage}
+            alt="Ridho Firdaus — Graphic Designer & Video Editor"
+            width={1920}
+            height={1080}
             priority
+            sizes="(min-width: 1320px) 1320px, 100vw"
+            className="object-cover object-left sm:object-center"
           />
         </Reveal>
-        <Reveal className="self-end" delay={0.1}>
+      </section>
+
+      <section className="container-shell grid gap-12 py-16 sm:py-24 lg:grid-cols-[0.9fr_1.1fr]">
+        <Reveal>
           <h2 className="text-5xl font-black uppercase leading-none sm:text-7xl">{profile.headline}</h2>
-          <p className="mt-8 text-2xl font-medium leading-10 text-neutral-700">{profile.bio}</p>
+        </Reveal>
+        <Reveal className="self-end" delay={0.1}>
+          <p className="text-2xl font-medium leading-10 text-neutral-700">{profile.bio}</p>
           <div className="mt-10 grid gap-6 border-y border-line py-8 text-sm font-black uppercase text-muted sm:grid-cols-2">
             <p>Skills<br /><span className="text-ink">Graphic Design / Video Editing / Campaign Visual / UI Design</span></p>
             <p>Tools<br /><span className="text-ink">Adobe Photoshop / Premiere Pro / Figma / Canva / AI Tools</span></p>
