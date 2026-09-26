@@ -6,3 +6,5 @@ public/uploads
 
 # Local Netlify folder
 .netlify
+scratch/
+

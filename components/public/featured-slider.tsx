@@ -52,6 +52,7 @@ function ParallaxColumn({ covers, y, offset, className, priority }: ColumnProps)
             fill
             priority={priority && index === 0}
             sizes="(min-width: 1024px) 25vw, 50vw"
+            quality={55}
             className="pointer-events-none select-none object-cover"
             draggable={false}
           />
@@ -133,6 +134,7 @@ export function FeaturedSlider({ items }: { items: FeaturedItem[] }) {
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 25vw, 50vw"
+                quality={55}
                 className="object-cover"
               />
             </div>

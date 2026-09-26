@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { BrandMarquee } from "@/components/public/brand-marquee";
 import { FeaturedSlider } from "@/components/public/featured-slider";
-import { HeroVideo } from "@/components/public/hero-video";
+import { MainframeHero } from "@/components/public/mainframe-hero";
 import { PublicHeader } from "@/components/public/public-header";
 import { ServicesSection } from "@/components/public/services-section";
 import { StickyCardNav, type Chapter } from "@/components/public/sticky-card-nav";
@@ -32,6 +33,20 @@ export default async function HomePage() {
       thumbnailUrl: project.thumbnailUrl,
       blurb: getBrandBlurb(project.clientName)
     }));
+
+  // Brand ticker — unique client/brand names from the published work, most
+  // projects first. Personal / experimental projects (not real client brands)
+  // are kept out; add any non-brand name that slips in to NON_BRANDS.
+  const NON_BRANDS = new Set(["independent brands", "generative", "port jurnal"]);
+  const brandCounts = new Map<string, number>();
+  for (const project of projects) {
+    const name = project.clientName?.trim();
+    if (!name || NON_BRANDS.has(name.toLowerCase())) continue;
+    brandCounts.set(name, (brandCounts.get(name) ?? 0) + 1);
+  }
+  const marqueeBrands = Array.from(brandCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([name]) => name);
 
   // Chapter covers are HAND-PICKED so they never duplicate and each image truly
   // represents its pillar. `resolveCover(pick, i)` accepts: a published project's
@@ -120,17 +135,7 @@ export default async function HomePage() {
   return (
     <main>
       <PublicHeader variant="overlay" />
-      <HeroVideo
-        videoSrc="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260517_070729_32a7eb4e-d6e2-4571-badc-91b4dab1ecbe.mp4"
-        eyebrow="Portfolio / Creative Designer"
-        headline={
-          <>
-            Built <span className="italic">with</span>{" "}
-            <span className="font-sans font-extrabold tracking-tight">intent.</span>
-          </>
-        }
-        subline="Creative, story & production for brands that want to stand out."
-      />
+      <MainframeHero />
 
       {/* Primary navigation — a cinematic chapter deck. Its dark stage flows
           straight out of the hero video and funnels down into About. */}
@@ -187,6 +192,8 @@ export default async function HomePage() {
       <ServicesSection />
 
       {featuredItems.length > 0 && <FeaturedSlider items={featuredItems} />}
+
+      {marqueeBrands.length > 0 && <BrandMarquee brands={marqueeBrands} label="Brand yang pernah ditangani" />}
 
       <Testimonials />
 
